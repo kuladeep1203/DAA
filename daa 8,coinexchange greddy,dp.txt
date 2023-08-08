@@ -1,0 +1,317 @@
+1) greedy
+#include<stdio.h>
+int main()
+{
+int n;
+int k,count=0,temp, de;
+scanf("%d",&n);
+scanf("%d",&k);
+int a[k];
+for(int i=0;i<k;i++)
+{
+scanf("%d",&a[i]);
+}
+for(int i=0;i<k-1;i++)
+{
+    for(int j=i;j<k;j++)
+    {
+        if(a[i]>a[j])
+        {
+            temp=a[j];
+            a[j]=a[i];
+            a[i]=temp;
+        }
+    }
+}
+for(int i=k-1;i>=0;i--)
+{
+    if(n>=a[i])
+    {
+     de=n/a[i];
+     printf(" no.of %d coins-%d\n",a[i],de);
+     n=n%a[i];
+    }
+}
+
+return 0;
+
+}
+
+This greedy fails in the following input=for 6 as a number and denominations as 1,3,4  the minimum denomination should be two 3's 
+but if we use this algorith we get 4,1,1,instead of 3,3.
+
+
+
+
+
+
+2)
+#include <stdio.h>
+
+int main()
+{
+    int x, k, temp, flag = 0, count = 0, count1 = 0;
+    int de;
+
+    printf("Enter the amount \n");
+    scanf("%d", &x);
+
+    int x1 = x;
+
+    printf("Enter no.of denominations \n");
+    scanf("%d", &k);
+
+    int d[k];
+    int d1[k];
+
+    printf("Enter denominations \n");
+
+    for (int i = 0; i < k; i++)
+    {
+        scanf("%d", &d[i]);
+        d1[i] = 0;
+    }
+
+    for (int i = 0; i < k - 1; i++)
+    {
+        for (int j = i; j < k; j++)
+        {
+            if (d[i] > d[j])
+            {
+                temp = d[j];
+                d[j] = d[i];
+                d[i] = temp;
+            }
+        }
+    }
+
+    for (int i = k - 1; i >= 0; i--)
+    {
+        d1[i] = x / d[i];
+        count = count + x / d[i];
+        x = x % d[i];
+    }
+
+    if (x != 0)
+    {
+        printf("Change not possible with given denominations \n");
+        return 0;
+    }
+    else
+    {
+        for (int j = 2; j <= k; j++)
+        {
+            x = x1;
+            for (int i = k - j; i >= 0; i--)
+            {
+                count1 = count1 + x / d[i];
+                x = x % d[i];
+
+                if (count1 < count && x == 0)
+                {
+                    x = x1;
+                    count = count1;
+                    for (int i = k - 1; i > k - j; i--)
+                        d1[i] = 0;
+                    for (int i = k - j; i >= 0; i--)
+                    {
+                        d1[i] = x / d[i];
+                        x = x % d[i];
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < k; i++)
+        {
+            printf("No.of coins of %d Rs coins is %d \n", d[i], d1[i]);
+        }
+        printf("Total coins : %d \n", count);
+
+        return 0;
+    }
+}
+
+
+///
+
+
+
+
+
+
+3)
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int binarySearch(int array[], int x, int low, int high) 
+{
+    while (low <= high) 
+    {
+        int mid = low + (high - low) / 2;
+
+        if (array[mid] == x)
+        return mid;
+        if (array[mid] < x)
+        low = mid + 1;
+        else
+        high = mid - 1;
+    }
+    return -1;
+}
+
+int minimum(int k, int arr[])
+{
+    if(k==0)
+    {
+        return 0;
+    }
+    int min;
+    min=arr[0];
+    for(int i=0; i<k-1; i++)
+    {
+        if(min>=arr[i+1])
+        {
+            min=arr[i+1];
+        }
+    }
+    return min;
+}
+
+int change(int x, int n, int a[])
+{
+    int change1[x];
+    int count;
+    for(int i=0; i<n; i++)
+    {
+        change1[a[i]-1]=1;
+    }
+    int denomination[n];
+    int dp_array[n];
+    for(int i=2; i<=x; i++)
+    {
+        if(binarySearch(a,i,0,n)==-1)
+        {
+            int j=0;
+            while(a[j]<i)
+            {
+                denomination[j]=a[j];
+                j++;
+            }
+            for(int m=0; m<j; m++)
+            {
+                int pos = i-denomination[m];
+                dp_array[m] = change[pos-1];
+            }
+            count = 1 + minimum(j,dp_array);
+            change1[i-1] = count;
+        }
+    }
+    return change1[x-1];
+}
+
+int main()
+{
+    int n;
+    cout << "Enter number of denominations : ";
+    cin >> n;
+    int a[n];
+    cout << "Enter the denominations :-" << endl;
+    for(int i=0; i<n; i++)
+    {
+        cin >> a[i];
+    }
+    sort(a,a+n);
+    int x;
+    cout << "Enter the value to which we need change : ";
+    cin >> x;
+    int count;
+    count=change(x,n,a);
+    cout << "Number of coins : " << count << endl;
+    return 0;
+}
+
+
+4)
+#include <stdio.h>
+void sorting(int a[],int num)
+{
+    int temp=0;
+    for(int i=0;i<num;i++)
+    {
+        for(int j=i+1;j<num;j++)
+        {
+            if(a[j]<a[i])
+            {
+                temp=a[i];
+                a[i]=a[j];
+                a[j]=temp;
+
+            }
+        }
+    }
+}
+int main()
+{
+    int num=0,n=0,count=0;
+    printf("Enter the amount for which denomination is needed\t");
+    scanf("%d",&num);
+    printf("Enter the no.of denomination\t");
+    scanf("%d",&n);
+    int a[n];
+    int a1[n];
+    printf("Enter the denominations\n");
+    for(int i=0;i<n;i++)
+    {
+        scanf("%d",&a[i]);
+    }
+    sorting(a,n);
+    int l[n];
+    printf("Enter the limits of the denominations\n");
+    for(int i=n-1;i>=0;i--)
+    {
+        printf("Enter the limit of %d  coins\t",a[i]);
+        scanf("%d",&l[i]);
+    }
+    for(int i=n-1;i>=0;i--)
+    {
+        a1[i]=num/a[i];
+        if(a1[i]>l[i])
+        {
+            a1[i]=l[i];
+        }
+        count=count+a1[i];
+        num=num-(a1[i]*a[i]);
+    }
+    if(num!=0)
+    {
+        printf("cannot give change \n");
+    }
+    else
+    {
+        for(int i=0;i<n;i++)
+        {
+            printf("%d -> %drs coins\n",a1[i],a[i]);
+        }
+        printf("totally %d coins\n",count);
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
